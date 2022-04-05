@@ -1,0 +1,32 @@
+app-dev:
+  build:
+    image: app
+    dockerfile: Dockerfile
+  environment:
+    AWS_DEFAULT_REGION: us-east-1
+    AWS_PAGER: ''
+    SLS_STAGE: dev
+  encrypted_env_file:
+    - .env.dev.encrypted
+
+app-stage:
+  build:
+    image: app
+    dockerfile: Dockerfile
+  environment:
+    AWS_DEFAULT_REGION: us-east-1
+    AWS_PAGER: ''
+    SLS_STAGE: stage
+  encrypted_env_file:
+    - .env.stage.encrypted
+
+app-prod:
+  build:
+    image: app
+    dockerfile: Dockerfile
+  environment:
+    AWS_DEFAULT_REGION: us-east-1
+    AWS_PAGER: ''
+    SLS_STAGE: prod
+  encrypted_env_file:
+    - .env.prod.encrypted

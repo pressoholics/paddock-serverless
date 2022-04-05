@@ -1,0 +1,20 @@
+- type: parallel
+  steps:
+    - name: lint
+      service: app-dev
+      command: sh .codeship/linters.sh
+
+- name: develop
+  tag: develop
+  service: app-dev
+  command: sh .codeship/deploy.sh
+
+- name: staging
+  tag: staging
+  service: app-stage
+  command: sh .codeship/deploy.sh
+
+- name: production
+  tag: main
+  service: app-prod
+  command: sh .codeship/deploy.sh

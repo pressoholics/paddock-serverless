@@ -1,0 +1,65 @@
+Resources:
+  UsersTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: ${self:custom.deletionPolicy.${self:custom.stage}, self:custom.deletionPolicy.other}
+    Properties:
+      TableName: ${self:custom.userTableName}
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  UserDynamoDBTableSystemErrorAlarm:
+    Type: 'AWS::CloudWatch::Alarm'
+    Properties:
+      AlarmDescription: 'Alarm when system errors in User Table exceed 2% of total number of requests'
+      AlarmActions:
+        - !Ref UserDynamoDBMonitoringSNSTopic
+      Metrics:
+        - Id: 'e1'
+          Expression: 'm1/(m2+m3)'
+          Label: SystemErrorsOverTotalRequests
+        - Id: 'm1'
+          MetricStat:
+            Metric:
+              Namespace: 'AWS/DynamoDB'
+              MetricName: 'SystemErrors'
+              Dimensions:
+                - Name: 'TableName'
+                  Value: !Ref UsersTable
+            Period: 60
+            Stat: 'SampleCount'
+            Unit: 'Count'
+          ReturnData: False
+        - Id: 'm2'
+          MetricStat:
+            Metric:
+              Namespace: 'AWS/DynamoDB'
+              MetricName: 'ConsumedReadCapacityUnits'
+              Dimensions:
+                - Name: 'TableName'
+                  Value: !Ref UsersTable
+            Period: 60
+            Stat: 'SampleCount'
+            Unit: 'Count'
+          ReturnData: False
+        - Id: 'm3'
+          MetricStat:
+            Metric:
+              Namespace: 'AWS/DynamoDB'
+              MetricName: 'ConsumedWriteCapacityUnits'
+              Dimensions:
+                - Name: 'TableName'
+                  Value: !Ref UsersTable
+            Period: 60
+            Stat: 'SampleCount'
+            Unit: 'Count'
+          ReturnData: False
+      EvaluationPeriods: 20
+      Threshold: 2.0
+      ComparisonOperator: 'GreaterThanThreshold'

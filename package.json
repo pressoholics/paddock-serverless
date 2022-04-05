@@ -1,0 +1,104 @@
+{
+  "name": "serverless-boilerplate",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Boilerplate for AWS apps using serverless framework",
+  "main": "src/handlers/list-tables.ts",
+  "scripts": {
+    "start": "sls offline start",
+    "package": "sls package --stage dev",
+    "deploy:dev": "export SLS_SCRIPT_ENV=dev && npm run deploy:env",
+    "deploy:stage": "export NODE_ENV=production SLS_SCRIPT_ENV=stage npm run deploy:env",
+    "deploy:prod": "export NODE_ENV=production SLS_SCRIPT_ENV=prod npm run deploy:env",
+    "test": "jest",
+    "\n ######################  NPM Secondary Pipeline  ######################": "",
+    "deploy:env": "sls deploy --stage $SLS_SCRIPT_ENV --aws-s3-accelerate",
+    "build": "sls webpack",
+    "\n ######################  Automation Tools  ######################": "",
+    "sls-jam3-plugin": "serverless jam3",
+    "lint-staged": "lint-staged",
+    "linters": "npm-run-all -p js-lint adviser-dev ls-lint",
+    "adviser-dev": "adviser --tags dev --verbose",
+    "adviser-ci": "adviser --tags stage --verbose --quiet",
+    "js-lint": "eslint src --ext ts,js -c ./.eslintrc.json --quiet --ignore-pattern .gitignore",
+    "ls-lint": "node_modules/.bin/ls-lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jam3/serverless-boilerplate.git"
+  },
+  "keywords": [],
+  "author": "Iran Reyes <iranreyesfleitas@gmail.com> (http://www.iranreyes.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Jam3/serverless-boilerplate/issues"
+  },
+  "homepage": "https://github.com/Jam3/serverless-boilerplate#readme",
+  "devDependencies": {
+    "@babel/core": "7.12.3",
+    "@babel/preset-env": "7.12.1",
+    "@babel/preset-typescript": "7.12.1",
+    "@types/aws-lambda": "8.10.64",
+    "@types/node": "14.14.6",
+    "@types/uuid": "8.3.0",
+    "@typescript-eslint/eslint-plugin": "4.6.1",
+    "@typescript-eslint/parser": "4.6.1",
+    "babel-core": "6.26.3",
+    "babel-eslint": "10.1.0",
+    "babel-jest": "26.6.3",
+    "babel-loader": "8.1.0",
+    "cross-env": "7.0.3",
+    "eslint": "7.13.0",
+    "eslint-config-prettier": "6.15.0",
+    "eslint-plugin-import": "2.22.1",
+    "eslint-plugin-prettier": "3.1.4",
+    "jest": "26.6.3",
+    "npm-run-all": "4.1.5",
+    "serverless": "^2.35.0",
+    "serverless-iam-roles-per-function": "3.1.0",
+    "serverless-offline": "^6.8.0",
+    "serverless-plugin-aws-alerts": "1.7.2",
+    "serverless-plugin-ifelse": "1.0.7",
+    "serverless-webpack": "5.3.5",
+    "terser-webpack-plugin": "5.0.3",
+    "ts-jest": "26.4.4",
+    "ts-loader": "8.0.10",
+    "typescript": "4.0.5",
+    "webpack": "5.4.0",
+    "webpack-node-externals": "2.5.2"
+  },
+  "dependencies": {
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
+    "@ls-lint/ls-lint": "^1.9.2",
+    "adviser": "^0.7.5",
+    "adviser-plugin-dependencies": "^0.4.2",
+    "aws-sdk": "2.788.0",
+    "dotenv": "8.2.0",
+    "husky": "^4.3.0",
+    "lint-staged": "^10.5.1",
+    "prettier": "^2.1.2",
+    "serverless-dynamodb-local": "0.2.39",
+    "uuid": "8.3.2"
+  },
+  "engines": {
+    "node": ">=12",
+    "npm": ">=6.5.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "echo \"Pre-commit checks...\" && lint-staged",
+      "pre-push": "echo \"Pre-push checks...\" && npm run linters",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,ts}": [
+      "prettier --ignore-path .prettierignore --write",
+      "eslint --no-ignore --fix"
+    ]
+  },
+  "jest": {
+    "verbose": true
+  }
+}

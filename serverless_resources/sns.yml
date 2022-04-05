@@ -1,0 +1,9 @@
+Resources:
+  UserDynamoDBMonitoringSNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: User DynamoDB Monitoring SNS Topic
+      TopicName: ${self:service}-user-dynamo-monitoring
+      Subscription:
+        - Endpoint: 'iran.reyes@jam3.com'
+          Protocol: email

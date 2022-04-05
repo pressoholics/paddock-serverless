@@ -1,0 +1,170 @@
+service: ${self:custom.global_vars.SERVICE_NAME}
+useDotenv: true
+
+custom:
+  stage: ${self:custom.environment.${opt:stage, 'dev'}, 'dev'}
+  global_vars:
+    SERVICE_NAME: ${env:BASE_NAME}-${self:custom.stage}-api
+  corsEnabled:
+    prod: false
+    other: true
+  cacheEnabled:
+    other: false
+  userTableName: ${self:service}-user-table
+  environment:
+    dev: dev
+    stage: stage
+    prod: prod
+  lambdaDebugLogLevel:
+    dev: 4
+    stage: 4
+    prod: 4
+  dotenv:
+    include: []
+  deletionPolicy:
+    prod: Retain
+    other: Delete
+  serverless-iam-roles-per-function:
+    defaultInherit: true
+  dynamodb:
+    stages:
+      - dev
+    start:
+      port: 8000
+      inMemory: true
+      delayTransientStatuses: true
+      heapInitial: 200m
+      heapMax: 1g
+      migrate: true
+      seed: true
+      convertEmptyValues: true
+    seed:
+      test:
+        sources:
+          - table: ${self:custom.userTableName}
+            sources: [./serverless_resources/dynamo-offline-migrations/users.json]
+  alerts:
+    dashboards: true
+    topics:
+      alarm:
+        topic: ${self:service}-${self:custom.stage}-lambda-alerts-alarm
+        notifications:
+          - protocol: email
+            endpoint: iran.reyes@jam3.com # Change this to the responsable's email address
+    definitions:
+      anomalyDetection:
+        description: 'Anomaly lambda alarm'
+        type: anomalyDetection
+        namespace: 'AWS/Lambda'
+        metric: Invocations
+        threshold: 2
+        statistic: Sum
+        period: 60
+        evaluationPeriods: 1
+        datapointsToAlarm: 1
+        comparisonOperator: LessThanLowerOrGreaterThanUpperThreshold
+    alarms:
+      - functionErrors
+      - functionThrottles
+      - anomalyDetection
+  serverlessIfElse:
+    - If: '"${self:custom.stage}" != "prod"'
+      Exclude:
+        - functions.list-tables.reservedConcurrency
+
+plugins:
+  - serverless-webpack
+  - serverless-jam3-plugin
+  - serverless-dynamodb-local
+  - serverless-plugin-aws-alerts
+  - serverless-iam-roles-per-function
+  - serverless-plugin-ifelse
+  - serverless-offline
+
+package:
+  individually: true
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stackName: ${self:service}
+  apiName: ${self:service}-apigateway
+  memorySize: 512
+  timeout: 10
+  logs:
+    restApi: true
+  apiGateway:
+    metrics: true
+  tracing:
+    lambda: true
+    apiGateway: true
+  environment:
+    LOG_LEVEL: ${self:custom.lambdaDebugLogLevel.${self:custom.stage}}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - logs:CreateLogGroup
+        - logs:CreateLogStream
+        - logs:PutLogEvents
+      Resource:
+        - 'Fn::Join':
+            - ':'
+            - - 'arn:aws:logs'
+              - Ref: 'AWS::Region'
+              - Ref: 'AWS::AccountId'
+              - 'log-group:/aws/lambda/*:*:*'
+    - Effect: Allow
+      Action:
+        - xray:PutTelemetryRecords
+        - xray:PutTraceSegments
+      Resource: '*'
+
+functions:
+  get-user:
+    handler: src/handlers/get-user.default
+    name: ${self:service}-get-user
+    description: Example lambda that get user from userTable
+    reservedConcurrency: 50 # Analyze and update this value for production
+    environment:
+      tableName: ${self:custom.userTableName}
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource:
+          - { 'Fn::GetAtt': [UsersTable, Arn] }
+    events:
+      - http:
+          path: api/users/{id}
+          method: get
+          cors: ${self:custom.corsEnabled.${self:custom.stage}, self:custom.corsEnabled.other}
+          request:
+            parameters:
+              paths:
+                id: true
+  post-user:
+    handler: src/handlers/post-user.default
+    name: ${self:service}-post-user
+    description: Example lambda that add user to the userTable
+    reservedConcurrency: 50 # Analyze and update this value for production
+    environment:
+      tableName: ${self:custom.userTableName}
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:PutItem
+        Resource:
+          - { 'Fn::GetAtt': [UsersTable, Arn] }
+    events:
+      - http:
+          path: api/users
+          method: post
+          cors: ${self:custom.corsEnabled.${self:custom.stage}, self:custom.corsEnabled.other}
+          request:
+            schema:
+              application/json: ${file(config/json-schema-validators/user.json)}
+            passThrough: NEVER
+
+resources:
+  - ${file(serverless_resources/dynamodb.yml)}
+  - ${file(serverless_resources/sns.yml)}
