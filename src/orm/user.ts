@@ -16,14 +16,14 @@ class User {
     this.dynamoDBClient = new DynamoDBClient(userTable);
   }
 
-  async get(userId: string): Promise<AWS.DynamoDB.ItemList | null> {
+  async get(userHandle: string): Promise<AWS.DynamoDB.ItemList | null> {
     let dynamoDBQueryResult: AWS.DynamoDB.QueryOutput;
 
     try {
       const dynamoDBQuery = {
-        KeyConditionExpression: 'id = :userId',
+        KeyConditionExpression: 'userHandle = :userHandle',
         ExpressionAttributeValues: {
-          ':userId': userId
+          ':userHandle': userHandle
         }
       };
 
@@ -47,11 +47,12 @@ class User {
     return null;
   }
 
-  async save(id: string, email: string, name: string): Promise<any> {
+  async save(handle: string, email: string, userID: string): Promise<any> {
     const data = {
-      id,
-      email,
-      name
+      userHandle: handle,
+      sortKey: `${handle}#PROFILE#${userID}`,
+      userID: userID,
+      email: email
     };
 
     return this.dynamoDBClient.save(data);

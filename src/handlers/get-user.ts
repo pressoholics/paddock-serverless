@@ -14,15 +14,15 @@ const logger = new Logger({
 const handler: AWSLambda.Handler = async (event: AWSLambda.APIGatewayEvent) => {
   logger.input(event);
 
-  const userId = event.pathParameters?.id || '';
+  const userHandle = event.pathParameters?.id || '';
 
   let response = httpResponse.NotFound();
 
-  if (!validation.isUserIdFormat(userId)) {
+  if (!validation.isUserIdFormat(userHandle)) {
     logger.error('UserId validation failed');
   } else {
     try {
-      const userData = await user.get(userId);
+      const userData = await user.get(userHandle);
 
       if (userData) {
         response = httpResponse.Success(userData);

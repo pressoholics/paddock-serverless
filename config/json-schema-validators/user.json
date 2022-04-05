@@ -2,19 +2,29 @@
   "$schema": "http://json-schema.org/draft-04/schema",
   "type": "object",
   "additionalProperties": false,
-  "required": ["email", "name"],
-  "maxProperties": 2,
+  "required": ["handle", "sortKey", "email", "userID"],
+  "maxProperties": 4,
   "properties": {
+    "handle": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 15
+    },
+    "sortKey": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
     "email": {
       "type": "string",
       "minLength": 3,
       "maxLength": 100,
       "format": "email"
     },
-    "name": {
+    "userID": {
       "type": "string",
-      "minLength": 2,
-      "maxLength": 100
+      "minLength": 1,
+      "maxLength": 50
     }
   }
 }

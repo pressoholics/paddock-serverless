@@ -17,10 +17,12 @@ const handler: AWSLambda.Handler = async (event: AWSLambda.APIGatewayEvent) => {
 
   let response = httpResponse.Forbidden();
 
-  const { email, name } = JSON.parse(event.body || '');
+  const { email, handle } = JSON.parse(event.body || '');
+  const userID = uuidv4();
 
   try {
-    await user.save(uuidv4(), email, name);
+    await user.save(handle, email, userID);
+
     response = httpResponse.Success();
   } catch (error) {
     logger.error(error);
