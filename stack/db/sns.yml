@@ -5,5 +5,5 @@ Resources:
       DisplayName: User DynamoDB Monitoring SNS Topic
       TopicName: ${self:service}-user-dynamo-monitoring
       Subscription:
-        - Endpoint: 'iran.reyes@jam3.com'
+        - Endpoint: 'ben.moody@jam3.com'
           Protocol: email

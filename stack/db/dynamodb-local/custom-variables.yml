@@ -1,0 +1,16 @@
+stages:
+  - dev
+start:
+  port: 8000
+  inMemory: true
+  delayTransientStatuses: true
+  heapInitial: 200m
+  heapMax: 1g
+  migrate: true
+  seed: true
+  convertEmptyValues: true
+seed:
+  test:
+    sources:
+      - table: ${self:custom.stack.db.userTableName}
+        sources: [./stack/db/dynamodb-local/user-table-data.json]

@@ -1,9 +1,9 @@
 'use strict';
 
-import Logger from '../lib/logger';
-import validation from '../lib/validation';
-import httpResponse from '../lib/http-response';
-import User from '../orm/user';
+import Logger from '../../lib/logger';
+import validation from '../../lib/validation';
+import httpResponse from '../../lib/http-response';
+import User from '../../util/db/user';
 
 const user = new User(process.env.tableName || '');
 const logger = new Logger({

@@ -1,0 +1,54 @@
+# Optional prefix to prepend when generating names for target groups
+targetGroupPrefix: xxxx
+authorizers:
+  myFirstAuth:
+    type: 'cognito'
+    # Required
+    userPoolArn: 'arn:aws:cognito-idp:us-east-1:123412341234:userpool/us-east-1_123412341'
+    # Required
+    userPoolClientId: '1h57kf5cpq17m0eml12EXAMPLE'
+    # Required
+    userPoolDomain: your-test-domain
+    # If set to 'allow' this allows the request to be forwarded to the target when user is not authenticated.
+    # When omitted it defaults 'deny' which makes a HTTP 401 Unauthorized error be returned.
+    # Alternatively configure to 'authenticate' to redirect request to IdP authorization endpoint.
+    onUnauthenticatedRequest: deny
+    # optional. The query parameters (up to 10) to include in the redirect request to the authorization endpoint
+    requestExtraParams:
+      prompt: login
+      redirect: false
+    # Combination of any system-reserved scopes or custom scopes associated with the client (default: openid)
+    scope: 'first_name age'
+    # Name of the cookie used to maintain session information (default: AWSELBAuthSessionCookie)
+    sessionCookieName: '🍪'
+    # Maximum duration of the authentication session in seconds (default: 604800 seconds/7 days)
+    sessionTimeout: 7000
+  mySecondAuth:
+    type: oidc
+    # Required. The authorization endpoint of the IdP.
+    # Must be a full URL, including the HTTPS protocol, the domain, and the path
+    authorizationEndpoint: 'https://example.com'
+    # Required
+    clientId: i-am-client
+    # If creating a rule this is required
+    # If modifying a rule, this can be omitted if you set useExistingClientSecret to true (as below)
+    clientSecret: i-am-secret
+    # Only required if clientSecret is omitted
+    useExistingClientSecret: true
+    # Required. The OIDC issuer identifier of the IdP
+    # This must be a full URL, including the HTTPS protocol, the domain, and the path
+    issuer: 'https://www.iamscam.com'
+    # Required
+    tokenEndpoint: 'http://somewhere.org'
+    # Required
+    userInfoEndpoint: 'https://another-example.com'
+    # If set to 'allow' this allows the request to be forwarded to the target when user is not authenticated.
+    # Omit or set to 'deny' (default) to make a HTTP 401 Unauthorized error be returned instead.
+    # Alternatively configure to 'authenticate' to redirect request to IdP authorization endpoint.
+    onUnauthenticatedRequest: 'deny'
+    requestExtraParams:
+      prompt: login
+      redirect: false
+    scope: first_name age
+    sessionCookieName: '🍪'
+    sessionTimeout: 7000

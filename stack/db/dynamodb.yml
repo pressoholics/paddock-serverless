@@ -3,7 +3,7 @@ Resources:
     Type: AWS::DynamoDB::Table
     DeletionPolicy: ${self:custom.deletionPolicy.${self:custom.stage}, self:custom.deletionPolicy.other}
     Properties:
-      TableName: ${self:custom.userTableName}
+      TableName: ${self:custom.stack.db.userTableName}
       PointInTimeRecoverySpecification:
         PointInTimeRecoveryEnabled: true
       AttributeDefinitions:

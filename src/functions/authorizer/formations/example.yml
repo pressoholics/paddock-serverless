@@ -1,0 +1,25 @@
+# Should be set to 'request' for custom Lambda authorizers
+type: request
+# Mutually exclusive with `functionArn`
+functionName: authorizerFunc
+# Mutually exclusive with `functionName`
+functionArn: arn:aws:lambda:us-east-1:11111111111:function:external-authorizer
+# Optional. Custom name for created authorizer
+name: customAuthorizerName
+# Optional. Time to live for cached authorizer results, accepts values from 0 (no caching) to 3600 (1 hour)
+# When set to non-zero value, 'identitySource' must be defined as well
+resultTtlInSeconds: 300
+# Set if authorizer function will return authorization responses in simple format (default: false)
+enableSimpleResponses: true
+# Version of payload that will be sent to authorizer function (default: '2.0')
+payloadVersion: '2.0'
+# Optional. One or more mapping expressions of the request parameters in form of e.g `$request.header.Auth`.
+# Specified values are verified to be non-empty and not null by authorizer.
+# It is a required property when `resultTtlInSeconds` is non-zero as `identitySource` is additionally
+# used as cache key for authorizer responses caching.
+identitySource:
+  - $request.header.Auth
+  - $request.header.Authorization
+# Optional. Applicable only when using externally defined authorizer functions
+# to prevent creation of permission resource
+managedExternally: true

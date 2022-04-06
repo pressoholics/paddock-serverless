@@ -1,0 +1,24 @@
+# Attach to an externally created HTTP API via its ID:
+id: xxxx
+# Set a custom name for the API Gateway API (default: ${sls:stage}-${self:service})
+name: dev-my-service
+# Payload format version (note: use quotes in YAML: '1.0' or '2.0') (default: '2.0')
+payload: '2.0'
+# Disable the default 'execute-api' HTTP endpoint (default: false)
+# Useful when using a custom domain.
+disableDefaultEndpoint: true
+# Enable detailed CloudWatch metrics (default: false)
+metrics: true
+# Enable CORS HTTP headers with default settings (allow all)
+# Can be fine-tuned with specific options
+cors: true
+authorizers:
+  # JWT API authorizer
+  someJwtAuthorizer:
+    identitySource: $request.header.Authorization
+    issuerUrl: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_xxxxx
+    audience:
+      - xxxx
+      - xxxx
+  # Custom Lambda request authorizer
+  someCustomLambdaAuthorizer: ${file(./src/functions/authorizer/formations/example.yml)}

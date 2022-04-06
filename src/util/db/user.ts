@@ -1,5 +1,5 @@
-import DynamoDBClient from '../services/dynamodb';
-import Logger from '../lib/logger';
+import DynamoDBClient from './client-dynamodb';
+import Logger from '../../lib/logger';
 
 const logger = new Logger({
   level: process.env.LOG_LEVEL,

@@ -2,9 +2,9 @@
 
 import { v4 as uuidv4 } from 'uuid';
 
-import Logger from '../lib/logger';
-import httpResponse from '../lib/http-response';
-import User from '../orm/user';
+import Logger from '../../lib/logger';
+import httpResponse from '../../lib/http-response';
+import User from '../../util/db/user';
 
 const user = new User(process.env.tableName || '');
 const logger = new Logger({

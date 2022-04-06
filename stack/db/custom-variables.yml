@@ -1,0 +1,1 @@
+userTableName: ${self:service}-user-table

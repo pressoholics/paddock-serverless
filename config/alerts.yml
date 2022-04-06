@@ -1,0 +1,23 @@
+dashboards: true
+topics:
+  alarm:
+    topic: ${self:service}-${self:custom.stage}-lambda-alerts-alarm
+    notifications:
+      - protocol: email
+        endpoint: ben.moody@jam3.com # Change this to the responsable's email address
+definitions:
+  anomalyDetection:
+    description: 'Anomaly lambda alarm'
+    type: anomalyDetection
+    namespace: 'AWS/Lambda'
+    metric: Invocations
+    threshold: 2
+    statistic: Sum
+    period: 60
+    evaluationPeriods: 1
+    datapointsToAlarm: 1
+    comparisonOperator: LessThanLowerOrGreaterThanUpperThreshold
+alarms:
+  - functionErrors
+  - functionThrottles
+  - anomalyDetection
