@@ -3,7 +3,7 @@
 import Logger from '../../lib/logger';
 import validation from '../../lib/validation';
 import httpResponse from '../../lib/http-response';
-import {{name_pc}}DB from './util/user-db';
+import {{name_pc}}DB from './util/{{name_sc}}-db';
 
 const {{name}} = new {{name_pc}}DB(process.env.tableName || '');
 const logger = new Logger({
@@ -14,7 +14,7 @@ const logger = new Logger({
 const handler: AWSLambda.Handler = async (event: AWSLambda.APIGatewayEvent) => {
   logger.input(event);
 
-  const userHandle = event.pathParameters?.id || '';
+  const {{name_cc}}Handle = event.pathParameters?.id || '';
 
   let response = httpResponse.NotFound();
 

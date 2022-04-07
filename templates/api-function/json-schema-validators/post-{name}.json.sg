@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-04/schema",
   "type": "object",
   "additionalProperties": false,
-  "required": ["handle", "sortKey", "email", "userID"],
+  "required": ["handle", "sortKey", "email", "{{name_cc}}ID"],
   "maxProperties": 4,
   "properties": {
     "handle": {
@@ -21,7 +21,7 @@
       "maxLength": 100,
       "format": "email"
     },
-    "userID": {
+    "{{name_cc}}ID": {
       "type": "string",
       "minLength": 1,
       "maxLength": 50
