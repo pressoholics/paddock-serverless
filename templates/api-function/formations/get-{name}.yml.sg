@@ -10,7 +10,7 @@ get-{{name}}:
       Action:
         - dynamodb:Query
       Resource:
-        - { 'Fn::GetAtt': [{{name_pc}}sTable, Arn] }
+        - { 'Fn::GetAtt': [{{name_pc}}Table, Arn] }
   events:
     - http:
         path: api/{{name_sc}}/{id}
