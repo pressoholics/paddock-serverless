@@ -1,16 +1,16 @@
-post-user:
-  handler: src/functions/api/post-user.default
-  name: ${self:service}-post-user
-  description: Example lambda that add user to the userTable
+post-{{name_sc}}:
+  handler: src/functions/api/post-{{name_sc}}.default
+  name: ${self:service}-post-{{name_sc}}
+  description: Example lambda that add {{name}} to the {{name_cc}}Table
   reservedConcurrency: 50 # Analyze and update this value for production
   environment:
-    tableName: ${self:custom.stack.db.userTableName}
+    tableName: ${self:custom.stack.db.{{name_cc}}TableName}
   iamRoleStatements:
     - Effect: Allow
       Action:
         - dynamodb:PutItem
       Resource:
-        - { 'Fn::GetAtt': [UsersTable, Arn] }
+        - { 'Fn::GetAtt': [{{name_pc}}Table, Arn] }
   events:
     - http:
         path: api/{{name_sc}}
@@ -18,5 +18,5 @@ post-user:
         cors: ${self:custom.corsEnabled.${self:custom.stage}, self:custom.corsEnabled.other}
         request:
           schema:
-            application/json: ${file(src/functions/api/json-schema-validators/post-user.json)}
+            application/json: ${file(src/functions/api/json-schema-validators/post-{{name_sc}}.json)}
           passThrough: NEVER
