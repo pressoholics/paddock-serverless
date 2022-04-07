@@ -1,0 +1,6 @@
+{
+  "destination": "./src/functions/api",
+  "templateExtensions": [
+    ".sg"
+  ]
+}

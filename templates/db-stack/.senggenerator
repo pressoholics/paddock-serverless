@@ -1,0 +1,6 @@
+{
+  "destination": "./stack",
+  "templateExtensions": [
+    ".sg"
+  ]
+}

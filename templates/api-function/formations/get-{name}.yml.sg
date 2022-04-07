@@ -1,19 +1,19 @@
-get-user:
-  handler: src/functions/api/get-user.default
-  name: ${self:service}-get-user
-  description: Example lambda that get user from userTable
+get-{{name}}:
+  handler: src/functions/api/get-{{name}}.default
+  name: ${self:service}-get-{{name}}
+  description: Example lambda
   reservedConcurrency: 50 # Analyze and update this value for production
   environment:
-    tableName: ${self:custom.stack.db.userTableName}
+    tableName: ${self:custom.stack.db.{{name}}TableName}
   iamRoleStatements:
     - Effect: Allow
       Action:
         - dynamodb:Query
       Resource:
-        - { 'Fn::GetAtt': [UsersTable, Arn] }
+        - { 'Fn::GetAtt': [{{name_pc}}sTable, Arn] }
   events:
     - http:
-        path: api/users/{id}
+        path: api/{{name_sc}}/{id}
         method: get
         cors: ${self:custom.corsEnabled.${self:custom.stage}, self:custom.corsEnabled.other}
         request:

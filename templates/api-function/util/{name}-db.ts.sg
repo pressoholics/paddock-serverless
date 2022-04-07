@@ -1,0 +1,62 @@
+import DynamoDBClient from '../../../util/db/client-dynamodb';
+import Logger from '../../../lib/logger';
+
+const logger = new Logger({
+  level: process.env.LOG_LEVEL,
+  namespace: 'ORM-{{name_pc}}'
+});
+
+class {{name_pc}}DB {
+  private dynamoDBClient: DynamoDBClient;
+
+  constructor({{name_cc}}Table: string) {
+    if (!{{name_cc}}Table) {
+      throw Error('Invalid Table Name');
+    }
+    this.dynamoDBClient = new DynamoDBClient({{name_cc}}Table);
+  }
+
+  async get({{name_cc}}Handle: string): Promise<AWS.DynamoDB.ItemList | null> {
+    let dynamoDBQueryResult: AWS.DynamoDB.QueryOutput;
+
+    try {
+      const dynamoDBQuery = {
+        KeyConditionExpression: '{{name_cc}}Handle = :{{name_cc}}Handle',
+        ExpressionAttributeValues: {
+          ':{{name_cc}}Handle': {{name_cc}}Handle
+        }
+      };
+
+      dynamoDBQueryResult = await this.dynamoDBClient.query(dynamoDBQuery, true);
+
+      if (
+        dynamoDBQueryResult.Count &&
+        dynamoDBQueryResult.Count > 0 &&
+        dynamoDBQueryResult.Items &&
+        dynamoDBQueryResult.Items.length > 0
+      ) {
+        logger.debug('{{name}} fetched', dynamoDBQueryResult.Items);
+        return dynamoDBQueryResult.Items;
+      }
+    } catch (error) {
+      logger.error('Retrieving {{name}} from {{name}} Table failed', error);
+      throw new Error(error);
+    }
+
+    logger.debug('No {{name}} found');
+    return null;
+  }
+
+  async save(handle: string, email: string, {{name_cc}}ID: string): Promise<any> {
+    const data = {
+      {{name_cc}}Handle: handle,
+      sortKey: `${handle}#PROFILE#${{{name_cc}}}ID}`,
+      {{name_cc}}ID: {{name_cc}}ID,
+      email: email
+    };
+
+    return this.dynamoDBClient.save(data);
+  }
+}
+
+export default {{name_pc}}DB;

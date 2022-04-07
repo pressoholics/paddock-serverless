@@ -12,5 +12,5 @@ start:
 seed:
   test:
     sources:
-      - table: ${self:custom.stack.db.userTableName}
-        sources: [./stack/db/dynamodb-local/user-table-data.json]
+      - table: ${self:custom.stack.db.{{name_cc}}TableName}
+        sources: [./stack/db/dynamodb-local/{{name_sc}}-table-data.json]

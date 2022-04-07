@@ -3,12 +3,12 @@
 import Logger from '../../lib/logger';
 import validation from '../../lib/validation';
 import httpResponse from '../../lib/http-response';
-import User from '../../util/db/user';
+import {{name_pc}}DB from './util/user-db';
 
-const user = new User(process.env.tableName || '');
+const {{name}} = new {{name_pc}}DB(process.env.tableName || '');
 const logger = new Logger({
   level: process.env.LOG_LEVEL,
-  namespace: 'Lambda-Get-User'
+  namespace: 'Lambda-Get-{{name_pc}}'
 });
 
 const handler: AWSLambda.Handler = async (event: AWSLambda.APIGatewayEvent) => {
@@ -18,14 +18,14 @@ const handler: AWSLambda.Handler = async (event: AWSLambda.APIGatewayEvent) => {
 
   let response = httpResponse.NotFound();
 
-  if (!validation.isUserIdFormat(userHandle)) {
-    logger.error('UserId validation failed');
+  if (!validation.is{{name_pc}}IdFormat({{name_cc}}Handle)) {
+    logger.error('{{name_pc}}Id validation failed');
   } else {
     try {
-      const userData = await user.get(userHandle);
+      const {{name_cc}}Data = await {{name}}.get({{name_cc}}Handle);
 
-      if (userData) {
-        response = httpResponse.Success(userData);
+      if ({{name_cc}}Data) {
+        response = httpResponse.Success({{name_cc}}Data);
       }
     } catch (error) {
       logger.error(error);

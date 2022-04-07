@@ -1,29 +1,29 @@
 Resources:
-  UsersTable:
+  {{name_pc}}Table:
     Type: AWS::DynamoDB::Table
     DeletionPolicy: ${self:custom.deletionPolicy.${self:custom.stage}, self:custom.deletionPolicy.other}
     Properties:
-      TableName: ${self:custom.stack.db.userTableName}
+      TableName: ${self:custom.stack.db.{{name_cc}}TableName}
       PointInTimeRecoverySpecification:
         PointInTimeRecoveryEnabled: true
       AttributeDefinitions:
-        - AttributeName: userHandle
+        - AttributeName: {{name_cc}}Handle
           AttributeType: S
         - AttributeName: sortKey
           AttributeType: S
       KeySchema:
-        - AttributeName: userHandle
+        - AttributeName: {{name_cc}}Handle
           KeyType: HASH
         - AttributeName: sortKey
           KeyType: RANGE
       BillingMode: PAY_PER_REQUEST
 
-  UserDynamoDBTableSystemErrorAlarm:
+  {{name_pc}}DynamoDBTableSystemErrorAlarm:
     Type: 'AWS::CloudWatch::Alarm'
     Properties:
-      AlarmDescription: 'Alarm when system errors in User Table exceed 2% of total number of requests'
+      AlarmDescription: 'Alarm when system errors in {{name_pc}} Table exceed 2% of total number of requests'
       AlarmActions:
-        - !Ref UserDynamoDBMonitoringSNSTopic
+        - !Ref {{name_pc}}DynamoDBMonitoringSNSTopic
       Metrics:
         - Id: 'e1'
           Expression: 'm1/(m2+m3)'
@@ -35,7 +35,7 @@ Resources:
               MetricName: 'SystemErrors'
               Dimensions:
                 - Name: 'TableName'
-                  Value: !Ref UsersTable
+                  Value: !Ref {{name_pc}}Table
             Period: 60
             Stat: 'SampleCount'
             Unit: 'Count'
@@ -47,7 +47,7 @@ Resources:
               MetricName: 'ConsumedReadCapacityUnits'
               Dimensions:
                 - Name: 'TableName'
-                  Value: !Ref UsersTable
+                  Value: !Ref {{name_pc}}Table
             Period: 60
             Stat: 'SampleCount'
             Unit: 'Count'
@@ -59,7 +59,7 @@ Resources:
               MetricName: 'ConsumedWriteCapacityUnits'
               Dimensions:
                 - Name: 'TableName'
-                  Value: !Ref UsersTable
+                  Value: !Ref {{name_pc}}Table
             Period: 60
             Stat: 'SampleCount'
             Unit: 'Count'

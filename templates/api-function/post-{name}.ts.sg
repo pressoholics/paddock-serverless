@@ -4,12 +4,12 @@ import { v4 as uuidv4 } from 'uuid';
 
 import Logger from '../../lib/logger';
 import httpResponse from '../../lib/http-response';
-import User from '../../util/db/user';
+import {{name_pc}}DB from './util/{{name}}-db';
 
-const user = new User(process.env.tableName || '');
+const {{name}} = new {{name_pc}}DB(process.env.tableName || '');
 const logger = new Logger({
   level: process.env.LOG_LEVEL,
-  namespace: 'Lambda-Get-User'
+  namespace: 'Lambda-Get-{{name_pc}}'
 });
 
 const handler: AWSLambda.Handler = async (event: AWSLambda.APIGatewayEvent) => {
@@ -18,10 +18,10 @@ const handler: AWSLambda.Handler = async (event: AWSLambda.APIGatewayEvent) => {
   let response = httpResponse.Forbidden();
 
   const { email, handle } = JSON.parse(event.body || '');
-  const userID = uuidv4();
+  const {{name}}ID = uuidv4();
 
   try {
-    await user.save(handle, email, userID);
+    await {{name}}.save(handle, email, {{name}}ID);
 
     response = httpResponse.Success();
   } catch (error) {
