@@ -1,0 +1,3 @@
+functions:
+  - ${file(./src/functions/api/formations/get-{{name_sc}}.yml)}
+  - ${file(./src/functions/api/formations/post-{{name_sc}}.yml)}

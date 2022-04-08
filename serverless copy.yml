@@ -3,6 +3,8 @@ useDotenv: true
 
 custom:
   stage: ${self:custom.environment.${opt:stage, 'dev'}, 'dev'}
+  stack:
+    db: ${file(./stack/db/custom-variables.yml)}
   global_vars:
     SERVICE_NAME: ${env:BASE_NAME}-${self:custom.stage}-api
   corsEnabled:
@@ -25,6 +27,8 @@ custom:
     other: Delete
   serverless-iam-roles-per-function:
     defaultInherit: true
+  ## Plugin config: serverless-dynamodb-local
+  dynamodb: ${file(./stack/db/dynamodb-local/custom-variables.yml)}
   alerts: ${file(./config/alerts.yml)}
   serverlessIfElse:
     - If: '"${self:custom.stage}" != "prod"'
@@ -34,6 +38,7 @@ custom:
 plugins:
   - serverless-webpack
   - serverless-jam3-plugin
+  - serverless-dynamodb-local
   - serverless-plugin-aws-alerts
   - serverless-iam-roles-per-function
   - serverless-plugin-ifelse
@@ -58,4 +63,22 @@ provider:
     apiGateway: true
   environment:
     LOG_LEVEL: ${self:custom.lambdaDebugLogLevel.${self:custom.stage}}
+  ## Provider: S3 buckets
+  # s3: ${file(./config/provider/provider-s3.yml)}
+  ## Provider: Deployment bucket
+  # delpoymentPrefix: serverless
+  # deploymentBucket: ${file(./config/provider/provider-deployment-bucket.yml)}
+  ## Provider: HTTP API
+  # httpApi: ${file(./config/provider/provider-http-api.yml)}
+  ## Provider: ALB Application Load Balancer
+  # alb: ${file(./config/provider/provider-alb-load-balancer.yml)}
+  ## Plugin config: serverless-iam-roles-per-function
   iamRoleStatements: ${file(./config/plugin/serverless-iam-roles-per-function.yml)}
+
+functions:
+  - ${file(./src/functions/api/formations/get-user2.yml)}
+  - ${file(./src/functions/api/formations/post-user3.yml)}
+
+resources:
+  - ${file(./stack/db/dynamodb.yml)}
+  - ${file(./stack/db/sns.yml)}

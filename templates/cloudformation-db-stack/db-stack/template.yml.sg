@@ -1,0 +1,11 @@
+custom:
+  stack:
+    db: ${file(./stack/db/custom-variables.yml)}
+  dynamodb: ${file(./stack/db/dynamodb-local/custom-variables.yml)}
+
+plugins:
+  - serverless-dynamodb-local
+
+resources:
+  - ${file(./stack/db/dynamodb.yml)}
+  - ${file(./stack/db/sns.yml)}

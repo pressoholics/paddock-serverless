@@ -18,7 +18,7 @@ const handler: AWSLambda.Handler = async (event: AWSLambda.APIGatewayEvent) => {
 
   let response = httpResponse.NotFound();
 
-  if (!validation.is{{name_pc}}IdFormat({{name_cc}}Handle)) {
+  if (!validation.isUserIdFormat({{name_cc}}Handle)) {
     logger.error('{{name_pc}}Id validation failed');
   } else {
     try {
