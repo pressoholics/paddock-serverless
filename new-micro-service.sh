@@ -83,7 +83,7 @@ case $microServiceSelection in
 esac
 
 #TODO: fix this Hack to temp install js-yaml and lodash
-npm uninstall js-yaml
-npm uninstall lodash
+npm uninstall -D js-yaml
+npm uninstall -D lodash
 
 exit
