@@ -1,0 +1,9 @@
+provider:
+  s3:
+    # Eventual additional properties in camel case
+    {{name_cc}}:
+      # Supported properties are the same ones as supported by CF resource for S3 bucket
+      # See https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket.html
+      name: {{name_sc}}
+      versioningConfiguration:
+        Status: Enabled

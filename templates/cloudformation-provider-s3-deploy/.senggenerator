@@ -1,0 +1,6 @@
+{
+  "destination": "./cloudformation-templates",
+  "templateExtensions": [
+    ".sg"
+  ]
+}
