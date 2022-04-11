@@ -39,8 +39,6 @@ if [ -z $microServiceName ]; then
     exit
 fi
 
-nvm use 14
-
 #TODO: fix this Hack to temp install js-yaml and lodash
 if [ `npm list -g | grep -c lodash` -eq 0 -o ! -d node_module ]; then
     npm install lodash
