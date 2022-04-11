@@ -39,6 +39,11 @@ if [ -z $microServiceName ]; then
     exit
 fi
 
+#TODO: fix this Hack to temp install js-yaml and lodash
+if [ `npm list -g | grep -c lodash` -eq 0 -o ! -d node_module ]; then
+    npm install lodash
+fi
+
 sgWizardServiceKey=false
 sgWizardServiceCloudFormationKey=false
 
