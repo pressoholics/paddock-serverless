@@ -39,6 +39,10 @@ if [ -z $microServiceName ]; then
     exit
 fi
 
+#TODO: fix this Hack to temp install js-yaml and lodash
+npm install js-yaml
+npm install lodash
+
 sgWizardServiceKey=false
 sgWizardServiceCloudFormationKey=false
 
@@ -54,6 +58,8 @@ case $microServiceSelection in
         sgWizardServiceCloudFormationKey='db-stack'
 
         runServiceSgGenerator $sgWizardServiceKey $microServiceName $sgWizardServiceCloudFormationKey
+
+        sls dynamodb install
     ;;
     "3")
 
@@ -68,10 +74,16 @@ case $microServiceSelection in
         sgWizardServiceCloudFormationKey='db-stack'
 
         runServiceSgGenerator $sgWizardServiceKey $microServiceName $sgWizardServiceCloudFormationKey
+
+        sls dynamodb install
     ;;
     "0")
         exit
     ;;
 esac
+
+#TODO: fix this Hack to temp install js-yaml and lodash
+npm uninstall js-yaml
+npm uninstall lodash
 
 exit
